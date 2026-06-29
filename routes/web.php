@@ -39,6 +39,8 @@ Route::middleware(['auth', 'role:employer'])->group(function () {
     Route::get('/employer/search', [SearchController::class, 'index'])->name('employer.search');
     Route::get('/offres/creer', [EmployerController::class, 'createOffer'])->name('employer.offer.create');
     Route::post('/offres', [EmployerController::class, 'storeOffer'])->name('employer.offer.store');
+    Route::get('/offres/{offer}/modifier', [EmployerController::class, 'editOffer'])->name('employer.offer.edit');
+    Route::put('/offres/{offer}', [EmployerController::class, 'updateOffer'])->name('employer.offer.update');
     Route::get('/offres/{offer}/candidats', [EmployerController::class, 'candidates'])->name('employer.offer.candidates');
     Route::post('/candidatures/{application}/{decision}', [EmployerController::class, 'updateApplication'])
         ->whereIn('decision', ['accepter', 'refuser'])->name('employer.application.decision');

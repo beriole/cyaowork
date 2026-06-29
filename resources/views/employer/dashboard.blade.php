@@ -137,7 +137,7 @@
                                     </form>
                                     @endif
                                 @endif
-                                <button class="btn-press w-10 h-10 grid place-items-center rounded-xl border border-line hover:border-primary hover:text-primary"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                                <a href="{{ route('employer.offer.edit', $o) }}" class="btn-press w-10 h-10 grid place-items-center rounded-xl border border-line hover:border-primary hover:text-primary" aria-label="Modifier l'offre"><i data-lucide="pencil" class="w-4 h-4"></i></a>
                             </div>
                         </article>
                         @endforeach

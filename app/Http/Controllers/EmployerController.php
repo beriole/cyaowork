@@ -33,14 +33,46 @@ class EmployerController extends Controller
     public function createOffer(): View
     {
         $categories = Category::orderBy('name')->get();
+        $offer = null;
 
-        return view('employer.offer-create', compact('categories'));
+        return view('employer.offer-create', compact('categories', 'offer'));
+    }
+
+    /** Formulaire d'édition d'une offre existante. */
+    public function editOffer(JobOffer $offer): View
+    {
+        abort_unless($offer->employer_id === Auth::id(), 403);
+        $categories = Category::orderBy('name')->get();
+
+        return view('employer.offer-create', compact('categories', 'offer'));
+    }
+
+    /** Met à jour une offre existante. */
+    public function updateOffer(Request $request, JobOffer $offer): RedirectResponse
+    {
+        abort_unless($offer->employer_id === Auth::id(), 403);
+
+        $offer->update($this->validatedOffer($request));
+
+        return redirect()->route('employer.dashboard')->with('status', "Offre « {$offer->title} » mise à jour.");
     }
 
     /** Enregistre une nouvelle offre (brouillon ou publiée). */
     public function storeOffer(Request $request): RedirectResponse
     {
-        $data = $request->validate([
+        $offer = JobOffer::create([...$this->validatedOffer($request), 'employer_id' => Auth::id()]);
+
+        $msg = $offer->status === 'published'
+            ? "Offre « {$offer->title} » publiée."
+            : "Offre « {$offer->title} » enregistrée en brouillon.";
+
+        return redirect()->route('employer.dashboard')->with('status', $msg);
+    }
+
+    /** Règles de validation communes création/édition d'offre. */
+    private function validatedOffer(Request $request): array
+    {
+        return $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'category_id' => ['nullable', 'exists:categories,id'],
             'description' => ['nullable', 'string', 'max:5000'],
@@ -51,14 +83,6 @@ class EmployerController extends Controller
             'contract_type' => ['required', 'in:ponctuel,journalier,permanent'],
             'status' => ['required', 'in:draft,published'],
         ]);
-
-        $offer = JobOffer::create([...$data, 'employer_id' => Auth::id()]);
-
-        $msg = $offer->status === 'published'
-            ? "Offre « {$offer->title} » publiée."
-            : "Offre « {$offer->title} » enregistrée en brouillon.";
-
-        return redirect()->route('employer.dashboard')->with('status', $msg);
     }
 
     private function authorizeOwner(Application $application): void

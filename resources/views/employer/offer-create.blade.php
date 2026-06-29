@@ -1,11 +1,16 @@
 @extends('layouts.base')
-@section('title', 'Publier une offre — CyaoWork')
+@section('title', ($offer ? 'Modifier' : 'Publier').' une offre — CyaoWork')
+
+@php
+    $editing = (bool) $offer;
+    $val = fn ($field, $default = '') => old($field, $offer->$field ?? $default);
+@endphp
 
 @section('body')
 <div class="min-h-dvh bg-[#F4F6FB]">
     <header class="sticky top-0 z-40 h-16 bg-white/80 backdrop-blur-xl border-b border-line flex items-center gap-3 px-4 sm:px-6">
         <a href="{{ route('employer.dashboard') }}" class="grid place-items-center w-10 h-10 rounded-xl hover:bg-muted" aria-label="Retour"><i data-lucide="arrow-left" class="w-5 h-5"></i></a>
-        <h1 class="font-bold text-lg">Publier une offre</h1>
+        <h1 class="font-bold text-lg">{{ $editing ? 'Modifier l\'offre' : 'Publier une offre' }}</h1>
     </header>
 
     <main class="mx-auto max-w-2xl p-4 sm:p-6">
@@ -16,12 +21,13 @@
         </div>
         @endif
 
-        <form method="POST" action="{{ route('employer.offer.store') }}" class="reveal rounded-3xl bg-white border border-line p-6 sm:p-8 space-y-5">
+        <form method="POST" action="{{ $editing ? route('employer.offer.update', $offer) : route('employer.offer.store') }}" class="reveal rounded-3xl bg-white border border-line p-6 sm:p-8 space-y-5">
             @csrf
+            @if($editing) @method('PUT') @endif
 
             <div>
                 <label class="block text-sm font-semibold mb-1.5">Intitulé du poste <span class="text-rose">*</span></label>
-                <input type="text" name="title" value="{{ old('title') }}" required placeholder="Ex. Aide ménagère 3j/semaine"
+                <input type="text" name="title" value="{{ $val('title') }}" required placeholder="Ex. Aide ménagère 3j/semaine"
                     class="w-full h-12 px-4 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary" />
             </div>
 
@@ -31,13 +37,13 @@
                     <select name="category_id" class="w-full h-12 px-4 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary">
                         <option value="">— Choisir —</option>
                         @foreach($categories as $c)
-                        <option value="{{ $c->id }}" @selected(old('category_id') == $c->id)>{{ $c->name }}</option>
+                        <option value="{{ $c->id }}" @selected($val('category_id') == $c->id)>{{ $c->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold mb-1.5">Ville</label>
-                    <input type="text" name="city" value="{{ old('city') }}" placeholder="Ex. Douala"
+                    <input type="text" name="city" value="{{ $val('city') }}" placeholder="Ex. Douala"
                         class="w-full h-12 px-4 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary" />
                 </div>
             </div>
@@ -45,15 +51,15 @@
             <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-semibold mb-1.5">Rémunération (FCFA)</label>
-                    <input type="number" name="salary_amount" value="{{ old('salary_amount') }}" min="0" step="500" placeholder="Ex. 2500"
+                    <input type="number" name="salary_amount" value="{{ $val('salary_amount') }}" min="0" step="500" placeholder="Ex. 2500"
                         class="w-full h-12 px-4 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary" />
                 </div>
                 <div>
                     <label class="block text-sm font-semibold mb-1.5">Périodicité <span class="text-rose">*</span></label>
                     <select name="salary_period" required class="w-full h-12 px-4 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary">
-                        <option value="day" @selected(old('salary_period','day')==='day')>par jour</option>
-                        <option value="hour" @selected(old('salary_period')==='hour')>par heure</option>
-                        <option value="month" @selected(old('salary_period')==='month')>par mois</option>
+                        <option value="day" @selected($val('salary_period','day')==='day')>par jour</option>
+                        <option value="hour" @selected($val('salary_period')==='hour')>par heure</option>
+                        <option value="month" @selected($val('salary_period')==='month')>par mois</option>
                     </select>
                 </div>
             </div>
@@ -62,14 +68,14 @@
                 <div>
                     <label class="block text-sm font-semibold mb-1.5">Type de contrat <span class="text-rose">*</span></label>
                     <select name="contract_type" required class="w-full h-12 px-4 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary">
-                        <option value="permanent" @selected(old('contract_type','permanent')==='permanent')>Permanent</option>
-                        <option value="journalier" @selected(old('contract_type')==='journalier')>Journalier</option>
-                        <option value="ponctuel" @selected(old('contract_type')==='ponctuel')>Ponctuel</option>
+                        <option value="permanent" @selected($val('contract_type','permanent')==='permanent')>Permanent</option>
+                        <option value="journalier" @selected($val('contract_type')==='journalier')>Journalier</option>
+                        <option value="ponctuel" @selected($val('contract_type')==='ponctuel')>Ponctuel</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold mb-1.5">Horaires</label>
-                    <input type="text" name="schedule" value="{{ old('schedule') }}" placeholder="Ex. Lun, Mer, Ven · matin"
+                    <input type="text" name="schedule" value="{{ $val('schedule') }}" placeholder="Ex. Lun, Mer, Ven · matin"
                         class="w-full h-12 px-4 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary" />
                 </div>
             </div>
@@ -77,17 +83,17 @@
             <div>
                 <label class="block text-sm font-semibold mb-1.5">Description</label>
                 <textarea name="description" rows="4" placeholder="Décrivez la mission, les attentes, le profil recherché…"
-                    class="w-full px-4 py-3 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary resize-y">{{ old('description') }}</textarea>
+                    class="w-full px-4 py-3 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary resize-y">{{ $val('description') }}</textarea>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 pt-2">
                 <button type="submit" name="status" value="published"
                     class="btn-press flex-1 h-12 rounded-xl text-white font-semibold bg-gradient-to-r from-accent to-accent-dark shadow-lg shadow-accent/25 inline-flex items-center justify-center gap-2">
-                    <i data-lucide="send" class="w-5 h-5"></i>Publier l'offre
+                    <i data-lucide="{{ $editing ? 'save' : 'send' }}" class="w-5 h-5"></i>{{ $editing ? 'Enregistrer & publier' : "Publier l'offre" }}
                 </button>
                 <button type="submit" name="status" value="draft"
                     class="btn-press h-12 px-6 rounded-xl border border-line text-slate-600 font-semibold hover:border-primary hover:text-primary inline-flex items-center justify-center gap-2 transition-colors">
-                    <i data-lucide="save" class="w-5 h-5"></i>Brouillon
+                    <i data-lucide="file-text" class="w-5 h-5"></i>Brouillon
                 </button>
             </div>
         </form>
