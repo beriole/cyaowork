@@ -59,7 +59,11 @@
                     <div class="flex-1 min-w-0">
                         <div class="flex items-start justify-between gap-2">
                             <div>
+                                @if($wp)
+                                <a href="{{ route('workers.show', $wp) }}" class="font-semibold hover:text-primary transition-colors">{{ $a->worker->name }}</a>
+                                @else
                                 <h3 class="font-semibold">{{ $a->worker->name }}</h3>
+                                @endif
                                 <p class="text-sm text-slate-500">{{ $wp?->headline }}@if($wp?->city) · {{ $wp->city }}@endif</p>
                             </div>
                             <span class="text-xs font-semibold {{ $st['c'] }} rounded-full px-2.5 py-1 whitespace-nowrap">{{ $st['t'] }}</span>

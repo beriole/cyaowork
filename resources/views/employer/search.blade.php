@@ -136,8 +136,11 @@
                     <span class="font-head font-bold">{{ number_format($w->expected_salary, 0, ',', ' ') }} <span class="text-xs font-normal text-slate-400">FCFA/{{ $periodFr[$w->salary_period] ?? $w->salary_period }}</span></span>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
-                    <button type="button" class="btn-press flex-1 h-11 rounded-xl text-white text-sm font-semibold inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-secondary shadow-md shadow-primary/25"><i data-lucide="send" class="w-4 h-4"></i>Contacter</button>
-                    <button type="button" class="btn-press h-11 px-4 rounded-xl border border-line text-sm font-semibold hover:border-primary hover:text-primary">Voir profil</button>
+                    <form method="POST" action="{{ route('workers.contact', $w) }}" class="flex-1">
+                        @csrf
+                        <button type="submit" class="btn-press w-full h-11 rounded-xl text-white text-sm font-semibold inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-secondary shadow-md shadow-primary/25"><i data-lucide="send" class="w-4 h-4"></i>Contacter</button>
+                    </form>
+                    <a href="{{ route('workers.show', $w) }}" class="btn-press h-11 px-4 rounded-xl border border-line text-sm font-semibold hover:border-primary hover:text-primary inline-flex items-center">Voir profil</a>
                 </div>
             </article>
             @empty

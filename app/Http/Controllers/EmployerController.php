@@ -8,11 +8,13 @@ use App\Models\Contract;
 use App\Models\JobOffer;
 use App\Models\Subscription;
 use App\Models\Transaction;
+use App\Models\Conversation;
 use App\Notifications\ApplicationStatusUpdated;
 use App\Services\Payment\PaymentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class EmployerController extends Controller
@@ -67,6 +69,38 @@ class EmployerController extends Controller
             : "Offre « {$offer->title} » enregistrée en brouillon.";
 
         return redirect()->route('employer.dashboard')->with('status', $msg);
+    }
+
+    /** Archive une offre (ou la republie si déjà archivée). */
+    public function archiveOffer(JobOffer $offer): RedirectResponse
+    {
+        abort_unless($offer->employer_id === Auth::id(), 403);
+
+        $archiving = $offer->status !== 'archived';
+        $offer->update(['status' => $archiving ? 'archived' : 'published']);
+
+        return back()->with('status', $archiving
+            ? "Offre « {$offer->title} » archivée."
+            : "Offre « {$offer->title} » republiée.");
+    }
+
+    /** Supprime définitivement une offre et ses dépendances. */
+    public function destroyOffer(JobOffer $offer): RedirectResponse
+    {
+        abort_unless($offer->employer_id === Auth::id(), 403);
+
+        $title = $offer->title;
+        DB::transaction(function () use ($offer) {
+            $offer->load('applications.contract');
+            $offer->applications->each(function ($application) {
+                optional($application->contract)->delete();
+                $application->delete();
+            });
+            Conversation::where('job_offer_id', $offer->id)->update(['job_offer_id' => null]);
+            $offer->delete();
+        });
+
+        return redirect()->route('employer.dashboard')->with('status', "Offre « {$title} » supprimée.");
     }
 
     /** Règles de validation communes création/édition d'offre. */

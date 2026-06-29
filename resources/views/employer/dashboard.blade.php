@@ -138,6 +138,14 @@
                                     @endif
                                 @endif
                                 <a href="{{ route('employer.offer.edit', $o) }}" class="btn-press w-10 h-10 grid place-items-center rounded-xl border border-line hover:border-primary hover:text-primary" aria-label="Modifier l'offre"><i data-lucide="pencil" class="w-4 h-4"></i></a>
+                                <form method="POST" action="{{ route('employer.offer.archive', $o) }}">
+                                    @csrf @method('PATCH')
+                                    <button class="btn-press w-10 h-10 grid place-items-center rounded-xl border border-line hover:border-warn hover:text-warn transition-colors" aria-label="{{ $o->status === 'archived' ? 'Republier' : 'Archiver' }}" title="{{ $o->status === 'archived' ? 'Republier' : 'Archiver' }}"><i data-lucide="{{ $o->status === 'archived' ? 'archive-restore' : 'archive' }}" class="w-4 h-4"></i></button>
+                                </form>
+                                <form method="POST" action="{{ route('employer.offer.destroy', $o) }}" onsubmit="return confirm('Supprimer définitivement l\'offre « {{ $o->title }} » et ses candidatures ?');">
+                                    @csrf @method('DELETE')
+                                    <button class="btn-press w-10 h-10 grid place-items-center rounded-xl border border-line hover:border-rose hover:text-rose transition-colors" aria-label="Supprimer" title="Supprimer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </form>
                             </div>
                         </article>
                         @endforeach

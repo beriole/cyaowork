@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 // ---- Public ----
 Route::get('/', [LandingController::class, 'index'])->name('home');
 Route::view('/menu', 'hub')->name('hub');
+Route::get('/travailleurs/{worker}', [\App\Http\Controllers\WorkerProfileController::class, 'show'])->name('workers.show');
+Route::post('/travailleurs/{worker}/contacter', [\App\Http\Controllers\WorkerProfileController::class, 'contact'])
+    ->middleware('auth')->name('workers.contact');
 
 // ---- Authentification (invités) ----
 Route::middleware('guest')->group(function () {
@@ -41,6 +44,8 @@ Route::middleware(['auth', 'role:employer'])->group(function () {
     Route::post('/offres', [EmployerController::class, 'storeOffer'])->name('employer.offer.store');
     Route::get('/offres/{offer}/modifier', [EmployerController::class, 'editOffer'])->name('employer.offer.edit');
     Route::put('/offres/{offer}', [EmployerController::class, 'updateOffer'])->name('employer.offer.update');
+    Route::patch('/offres/{offer}/archiver', [EmployerController::class, 'archiveOffer'])->name('employer.offer.archive');
+    Route::delete('/offres/{offer}', [EmployerController::class, 'destroyOffer'])->name('employer.offer.destroy');
     Route::get('/offres/{offer}/candidats', [EmployerController::class, 'candidates'])->name('employer.offer.candidates');
     Route::post('/candidatures/{application}/{decision}', [EmployerController::class, 'updateApplication'])
         ->whereIn('decision', ['accepter', 'refuser'])->name('employer.application.decision');
