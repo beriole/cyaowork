@@ -58,6 +58,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/messagerie', [MessagingController::class, 'index'])->name('messaging.index');
     Route::post('/messagerie/{conversation}/messages', [MessagingController::class, 'store'])->name('messaging.store');
+    // Contrats (parties : employeur & travailleur)
+    Route::get('/contrats/{contract}', [\App\Http\Controllers\ContractController::class, 'show'])->name('contracts.show');
+    Route::post('/contrats/{contract}/signer', [\App\Http\Controllers\ContractController::class, 'sign'])->name('contracts.sign');
     // Téléchargement PDF du contrat depuis le web (réutilise la logique API).
     Route::get('/contrats/{contract}/pdf', [\App\Http\Controllers\Api\ContractController::class, 'pdf'])->name('contracts.pdf');
 });

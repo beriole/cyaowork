@@ -82,7 +82,10 @@ class WorkerController extends Controller
             })
             ->sortByDesc('match')->values();
 
-        $applications = $worker->applications()->with('jobOffer')->latest()->get();
+        $applications = $worker->applications()->with(['jobOffer', 'contract'])->latest()->get();
+
+        // Contrats où la signature du travailleur est encore attendue.
+        $contractsToSign = $applications->map->contract->filter(fn ($c) => $c && ! $c->worker_signed_at)->values();
 
         $conversations = Conversation::where('worker_id', $worker->id)
             ->with(['employer', 'messages' => fn ($q) => $q->latest()->limit(1)])
@@ -95,6 +98,6 @@ class WorkerController extends Controller
             ['i' => 'briefcase',     'label' => 'Offres dispo.', 'val' => (string) JobOffer::published()->count(),                          'sub' => 'près de vous',                                                         'g' => 'from-sky-400 to-blue-600'],
         ];
 
-        return view('worker.dashboard', compact('worker', 'profile', 'completion', 'offers', 'applications', 'conversations', 'stats'));
+        return view('worker.dashboard', compact('worker', 'profile', 'completion', 'offers', 'applications', 'conversations', 'stats', 'contractsToSign'));
     }
 }

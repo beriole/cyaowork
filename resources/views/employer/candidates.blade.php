@@ -76,7 +76,7 @@
                 <div class="mt-4 flex flex-wrap items-center gap-2">
                     @if($a->status === 'accepted')
                         @if($a->contract)
-                        <a href="{{ route('contracts.pdf', $a->contract) }}" class="btn-press h-10 px-4 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white text-sm font-semibold inline-flex items-center gap-2 transition-colors"><i data-lucide="file-down" class="w-4 h-4"></i>Télécharger le contrat</a>
+                        <a href="{{ route('contracts.show', $a->contract) }}" class="btn-press h-10 px-4 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white text-sm font-semibold inline-flex items-center gap-2 transition-colors"><i data-lucide="file-signature" class="w-4 h-4"></i>{{ $a->contract->isFullySigned() ? 'Voir le contrat' : 'Voir / signer le contrat' }}</a>
                         @else
                         <form method="POST" action="{{ route('employer.contract', $a) }}">
                             @csrf
