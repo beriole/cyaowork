@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <style>
-        * { font-family: DejaVu Sans, sans-serif; }
+        * { font-family: Helvetica, Arial, sans-serif; }
         @page { margin: 110px 40px 80px 40px; }
         body { color: #0F172A; font-size: 12px; line-height: 1.5; }
         header { position: fixed; top: -80px; left: 0; right: 0; height: 70px; }
@@ -80,7 +80,7 @@
             <td>
                 <div class="label">Signature Employeur</div>
                 @if($employer_signed_at)
-                    <div class="signed">✓ Signé électroniquement</div>
+                    <div class="signed">Signé électroniquement</div>
                     <div class="stamp">{{ $employer->name }}<br>Le {{ $employer_signed_at->format('d/m/Y à H:i') }}</div>
                 @else
                     <div class="pending">En attente de signature</div>
@@ -89,7 +89,7 @@
             <td>
                 <div class="label">Signature Travailleur</div>
                 @if($worker_signed_at)
-                    <div class="signed">✓ Signé électroniquement</div>
+                    <div class="signed">Signé électroniquement</div>
                     <div class="stamp">{{ $worker->name }}<br>Le {{ $worker_signed_at->format('d/m/Y à H:i') }}</div>
                 @else
                     <div class="pending">En attente de signature</div>

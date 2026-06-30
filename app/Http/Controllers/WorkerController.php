@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Application;
 use App\Models\Category;
+use App\Models\Contract;
 use App\Models\Conversation;
 use App\Models\Document;
 use App\Models\JobOffer;
@@ -49,6 +50,16 @@ class WorkerController extends Controller
 
         return redirect()->route('worker.dashboard')->with('status', 'Profil mis à jour.');
     }
+    /** Liste des contrats du travailleur. */
+    public function contracts(): View
+    {
+        $contracts = Contract::whereHas('application', fn ($q) => $q->where('worker_id', Auth::id()))
+            ->with(['application.jobOffer.employer', 'application.jobOffer.category'])
+            ->latest()->get();
+
+        return view('worker.contracts', compact('contracts'));
+    }
+
     /** Postuler à une offre en 1 clic. */
     public function apply(JobOffer $offer): RedirectResponse
     {

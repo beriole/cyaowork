@@ -91,6 +91,8 @@ class EmployerController extends Controller
             'company_name' => ['nullable', 'string', 'max:255'],
             'type' => ['required', 'in:individual,company'],
             'city' => ['nullable', 'string', 'max:120'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ]);
 
         $employer->update(['name' => $data['name'], 'email' => $data['email'] ?? null]);
@@ -98,6 +100,8 @@ class EmployerController extends Controller
             'company_name' => $data['company_name'] ?? null,
             'type' => $data['type'],
             'city' => $data['city'] ?? null,
+            'latitude' => $data['latitude'] ?? null,
+            'longitude' => $data['longitude'] ?? null,
         ]);
 
         return redirect()->route('employer.dashboard')->with('status', 'Profil mis à jour.');

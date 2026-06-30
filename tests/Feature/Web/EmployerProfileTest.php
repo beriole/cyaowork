@@ -47,4 +47,20 @@ class EmployerProfileTest extends TestCase
             'user_id' => $employer->id, 'type' => 'company', 'company_name' => 'Maison Tchoua', 'city' => 'Douala',
         ]);
     }
+
+    public function test_l_employeur_enregistre_sa_geolocalisation(): void
+    {
+        $employer = $this->employer();
+
+        $this->actingAs($employer)
+            ->put(route('employer.profile.update'), [
+                'name' => 'Mme Tchoua', 'type' => 'individual',
+                'latitude' => 4.0611, 'longitude' => 9.7079,
+            ])
+            ->assertRedirect(route('employer.dashboard'));
+
+        $this->assertDatabaseHas('employer_profiles', [
+            'user_id' => $employer->id, 'latitude' => 4.0611, 'longitude' => 9.7079,
+        ]);
+    }
 }

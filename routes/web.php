@@ -36,6 +36,7 @@ Route::middleware(['auth', 'role:worker'])->group(function () {
     Route::get('/worker', [WorkerController::class, 'dashboard'])->name('worker.dashboard');
     Route::get('/worker/profil', [WorkerController::class, 'editProfile'])->name('worker.profile.edit');
     Route::put('/worker/profil', [WorkerController::class, 'updateProfile'])->name('worker.profile.update');
+    Route::get('/worker/contrats', [WorkerController::class, 'contracts'])->name('worker.contracts');
     Route::post('/offres/{offer}/postuler', [WorkerController::class, 'apply'])->name('worker.apply');
     Route::post('/worker/photo', [WorkerController::class, 'uploadPhoto'])->name('worker.photo');
     Route::post('/worker/documents', [WorkerController::class, 'uploadDocument'])->name('worker.documents');

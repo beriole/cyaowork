@@ -14,14 +14,14 @@
         'rejected'  => ['t' => 'Refusée',   'c' => 'text-rose bg-rose/10',         'i' => 'x-circle'],
     ];
     $sideItems = [
-        ['i' => 'home', 'n' => 'Accueil', 'active' => true],
-        ['i' => 'search', 'n' => 'Offres'],
+        ['i' => 'home', 'n' => 'Accueil', 'active' => true, 'url' => route('worker.dashboard')],
+        ['i' => 'search', 'n' => 'Offres', 'url' => route('offers.index')],
         ['i' => 'clipboard-list', 'n' => 'Mes candidatures', 'badge' => $applications->count()],
-        ['i' => 'message-circle', 'n' => 'Messagerie', 'badge' => $conversations->count()],
-        ['i' => 'user', 'n' => 'Mon profil'],
-        ['i' => 'calendar-check', 'n' => 'Disponibilité'],
+        ['i' => 'file-signature', 'n' => 'Mes contrats', 'url' => route('worker.contracts')],
+        ['i' => 'message-circle', 'n' => 'Messagerie', 'badge' => $conversations->count(), 'url' => route('messaging.index')],
+        ['i' => 'user', 'n' => 'Mon profil', 'url' => route('worker.profile.edit')],
         ['i' => 'star', 'n' => 'Mes avis'],
-        ['i' => 'settings', 'n' => 'Paramètres'],
+        ['i' => 'settings', 'n' => 'Paramètres', 'url' => route('worker.profile.edit')],
     ];
 @endphp
 
@@ -35,7 +35,7 @@
         </div>
         <nav class="flex-1 p-3 space-y-1 text-[15px]">
             @foreach($sideItems as $s)
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ ($s['active'] ?? false) ? 'bg-primary/10 text-primary' : 'text-slate-600 hover:bg-muted' }}">
+            <a href="{{ $s['url'] ?? '#' }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ ($s['active'] ?? false) ? 'bg-primary/10 text-primary' : 'text-slate-600 hover:bg-muted' }}">
                 <i data-lucide="{{ $s['i'] }}" class="w-5 h-5"></i><span class="flex-1">{{ $s['n'] }}</span>
                 @if(!empty($s['badge']))<span class="text-xs font-bold {{ ($s['active'] ?? false) ? 'bg-primary text-white' : 'bg-muted text-slate-500' }} rounded-full px-2 py-0.5">{{ $s['badge'] }}</span>@endif
             </a>
@@ -90,7 +90,7 @@
                         <p class="font-bold">{{ $contractsToSign->count() }} contrat{{ $contractsToSign->count() > 1 ? 's' : '' }} à signer</p>
                         <p class="text-white/80 text-sm">Validez votre mission par signature électronique.</p>
                     </div>
-                    <a href="{{ route('contracts.show', $contractsToSign->first()) }}" class="btn-press inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-white text-primary font-semibold shrink-0"><i data-lucide="pen-line" class="w-4 h-4"></i>Signer</a>
+                    <a href="{{ route('worker.contracts') }}" class="btn-press inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-white text-primary font-semibold shrink-0"><i data-lucide="pen-line" class="w-4 h-4"></i>Signer</a>
                 </div>
             </div>
             @endif
