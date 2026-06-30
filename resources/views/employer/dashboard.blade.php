@@ -63,7 +63,7 @@
             </label>
             <div class="ml-auto flex items-center gap-2">
                 <a href="{{ route('employer.offer.create') }}" class="btn-press hidden sm:inline-flex items-center gap-2 h-10 px-4 rounded-xl text-white text-sm font-semibold bg-gradient-to-r from-primary to-secondary shadow-md shadow-primary/25"><i data-lucide="plus" class="w-4 h-4"></i>Publier une offre</a>
-                <button class="relative grid place-items-center w-10 h-10 rounded-xl hover:bg-muted"><i data-lucide="bell" class="w-5 h-5 text-slate-600"></i><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose ring-2 ring-white"></span></button>
+                <x-notification-bell />
                 <x-logout-button />
                 <div class="flex items-center gap-2"><div class="w-9 h-9 rounded-full bg-gradient-to-br from-grape to-rose grid place-items-center text-white font-semibold">{{ \Illuminate\Support\Str::of($employer->name)->explode(' ')->map(fn($w) => mb_substr($w,0,1))->take(2)->implode('') }}</div><div class="hidden sm:block leading-tight"><p class="text-sm font-semibold">{{ $employer->name }}</p><p class="text-xs text-slate-500">Recruteur</p></div></div>
             </div>

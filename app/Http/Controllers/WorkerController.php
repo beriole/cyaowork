@@ -3,16 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\Category;
 use App\Models\Conversation;
 use App\Models\Document;
 use App\Models\JobOffer;
+use App\Models\Skill;
 use App\Notifications\NewApplicationReceived;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class WorkerController extends Controller
 {
+    /** Formulaire d'édition du profil travailleur. */
+    public function editProfile(): View
+    {
+        $profile = Auth::user()->workerProfile()->firstOrCreate([]);
+        $profile->load('skills');
+        $categories = Category::orderBy('name')->get();
+        $skills = Skill::orderBy('name')->get();
+
+        return view('worker.profile-edit', compact('profile', 'categories', 'skills'));
+    }
+
+    /** Enregistre le profil travailleur. */
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'headline' => ['nullable', 'string', 'max:255'],
+            'bio' => ['nullable', 'string', 'max:2000'],
+            'category_id' => ['nullable', 'exists:categories,id'],
+            'experience_years' => ['nullable', 'integer', 'min:0', 'max:60'],
+            'availability' => ['required', 'in:immediate,week,flexible'],
+            'expected_salary' => ['nullable', 'numeric', 'min:0'],
+            'salary_period' => ['required', 'in:hour,day,month'],
+            'city' => ['nullable', 'string', 'max:120'],
+            'skills' => ['nullable', 'array'],
+            'skills.*' => ['integer', 'exists:skills,id'],
+        ]);
+
+        $profile = Auth::user()->workerProfile()->firstOrCreate([]);
+        $profile->update(collect($data)->except('skills')->toArray());
+        $profile->skills()->sync($data['skills'] ?? []);
+
+        return redirect()->route('worker.dashboard')->with('status', 'Profil mis à jour.');
+    }
     /** Postuler à une offre en 1 clic. */
     public function apply(JobOffer $offer): RedirectResponse
     {

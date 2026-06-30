@@ -47,4 +47,14 @@ return [
         'api_key' => env('FAPSHI_API_KEY'),
     ],
 
+    // ---- Passerelle SMS (OTP) ----
+    'sms' => [
+        'driver' => env('SMS_DRIVER', 'log'), // log | http
+        'http' => [
+            'endpoint' => env('SMS_HTTP_ENDPOINT'),
+            'token' => env('SMS_HTTP_TOKEN'),
+            'sender' => env('SMS_SENDER', 'CyaoWork'),
+        ],
+    ],
+
 ];

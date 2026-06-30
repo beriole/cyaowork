@@ -116,6 +116,8 @@ class EmployerController extends Controller
             'city' => ['nullable', 'string', 'max:120'],
             'contract_type' => ['required', 'in:ponctuel,journalier,permanent'],
             'status' => ['required', 'in:draft,published'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ]);
     }
 

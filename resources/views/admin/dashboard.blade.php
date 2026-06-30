@@ -49,7 +49,7 @@
             <h1 class="font-bold text-lg">Tableau de bord</h1>
             <div class="ml-auto flex items-center gap-2">
                 <span class="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-accent-dark bg-accent/10 rounded-full px-3 py-1.5"><span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>Système OK</span>
-                <button class="relative grid place-items-center w-10 h-10 rounded-xl hover:bg-muted"><i data-lucide="bell" class="w-5 h-5 text-slate-600"></i></button>
+                <x-notification-bell />
             </div>
         </header>
 

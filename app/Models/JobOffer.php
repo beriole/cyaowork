@@ -5,10 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class JobOffer extends Model
 {
+    use Searchable;
+
     protected $guarded = [];
+
+    /** Champs indexés pour la recherche (Scout). */
+    public function toSearchableArray(): array
+    {
+        return [
+            'title' => $this->title,
+            'description' => $this->description,
+            'city' => $this->city,
+        ];
+    }
+
+    /** Seules les offres publiées sont cherchables. */
+    public function shouldBeSearchable(): bool
+    {
+        return $this->status === 'published';
+    }
 
     protected $casts = [
         'latitude' => 'float',

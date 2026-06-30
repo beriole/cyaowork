@@ -58,7 +58,7 @@
                 <i data-lucide="search" class="w-4 h-4 text-slate-400"></i><input placeholder="Rechercher une offre, un métier…" class="bg-transparent outline-none text-sm w-full" />
             </label>
             <div class="flex items-center gap-2 ml-auto">
-                <button class="relative grid place-items-center w-10 h-10 rounded-xl hover:bg-muted" aria-label="Notifications"><i data-lucide="bell" class="w-5 h-5 text-slate-600"></i><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose ring-2 ring-white"></span></button>
+                <x-notification-bell />
                 <x-logout-button />
                 <div class="flex items-center gap-2 pl-2">
                     <div class="relative">
@@ -122,7 +122,7 @@
                         <div class="text-sm">
                             <p class="font-semibold">Profil complété</p>
                             <p class="text-white/75 mt-0.5">Complétez pour plus de visibilité.</p>
-                            <a href="#" class="inline-flex items-center gap-1 mt-2 font-semibold text-accent-light hover:gap-2 transition-all">Compléter <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                            <a href="{{ route('worker.profile.edit') }}" class="inline-flex items-center gap-1 mt-2 font-semibold text-accent-light hover:gap-2 transition-all">Compléter <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
                         </div>
                     </div>
                 </div>

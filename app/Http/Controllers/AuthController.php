@@ -88,14 +88,21 @@ class AuthController extends Controller
             EmployerProfile::create(['user_id' => $user->id, 'type' => 'individual']);
         }
 
-        // Génération + "envoi" du code OTP (en dev : log + flash). En prod : service SMS.
-        $code = (string) random_int(100000, 999999);
-        Cache::put("otp:{$user->id}", $code, now()->addMinutes(10));
-        Log::info("OTP CyaoWork pour {$user->phone} : {$code}");
-
+        $code = $this->dispatchOtp($user->id, $user->phone);
         $request->session()->put('otp_user', $user->id);
 
         return redirect()->route('otp.show')->with('dev_otp', $code);
+    }
+
+    /** Génère un code OTP, le met en cache (10 min) et l'envoie par SMS. */
+    private function dispatchOtp(int $userId, string $phone): string
+    {
+        $code = (string) random_int(100000, 999999);
+        Cache::put("otp:{$userId}", $code, now()->addMinutes(10));
+
+        app(\App\Services\Sms\SmsProvider::class)->send($phone, "CyaoWork : votre code de vérification est {$code}. Valable 10 minutes.");
+
+        return $code;
     }
 
     // ---------- OTP ----------
@@ -136,9 +143,7 @@ class AuthController extends Controller
         $userId = $request->session()->get('otp_user');
         abort_unless($userId, 419);
 
-        $code = (string) random_int(100000, 999999);
-        Cache::put("otp:{$userId}", $code, now()->addMinutes(10));
-        Log::info("OTP CyaoWork (renvoi) user #{$userId} : {$code}");
+        $code = $this->dispatchOtp($userId, User::whereKey($userId)->value('phone'));
 
         return back()->with('dev_otp', $code);
     }

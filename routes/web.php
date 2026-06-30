@@ -32,6 +32,8 @@ Route::post('/deconnexion', [AuthController::class, 'logout'])->middleware('auth
 // ---- Espaces protégés par rôle ----
 Route::middleware(['auth', 'role:worker'])->group(function () {
     Route::get('/worker', [WorkerController::class, 'dashboard'])->name('worker.dashboard');
+    Route::get('/worker/profil', [WorkerController::class, 'editProfile'])->name('worker.profile.edit');
+    Route::put('/worker/profil', [WorkerController::class, 'updateProfile'])->name('worker.profile.update');
     Route::post('/offres/{offer}/postuler', [WorkerController::class, 'apply'])->name('worker.apply');
     Route::post('/worker/photo', [WorkerController::class, 'uploadPhoto'])->name('worker.photo');
     Route::post('/worker/documents', [WorkerController::class, 'uploadDocument'])->name('worker.documents');
@@ -61,6 +63,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::post('/notifications/lues', [\App\Http\Controllers\NotificationController::class, 'readAll'])->name('notifications.read');
+    Route::post('/notifications/{id}/lue', [\App\Http\Controllers\NotificationController::class, 'read'])->name('notifications.read.one');
     Route::get('/messagerie', [MessagingController::class, 'index'])->name('messaging.index');
     Route::post('/messagerie/{conversation}/messages', [MessagingController::class, 'store'])->name('messaging.store');
     // Contrats (parties : employeur & travailleur)

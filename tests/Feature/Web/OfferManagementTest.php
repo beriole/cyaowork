@@ -76,6 +76,24 @@ class OfferManagementTest extends TestCase
         ]);
     }
 
+    public function test_publier_une_offre_avec_geolocalisation(): void
+    {
+        $this->actingAs($this->employer())
+            ->post(route('employer.offer.store'), [
+                'title' => 'Gardien géolocalisé',
+                'salary_period' => 'month',
+                'contract_type' => 'permanent',
+                'status' => 'published',
+                'latitude' => 4.0511,
+                'longitude' => 9.7679,
+            ])
+            ->assertRedirect(route('employer.dashboard'));
+
+        $this->assertDatabaseHas('job_offers', [
+            'title' => 'Gardien géolocalisé', 'latitude' => 4.0511, 'longitude' => 9.7679,
+        ]);
+    }
+
     public function test_creation_offre_valide_les_champs_requis(): void
     {
         $this->actingAs($this->employer())

@@ -86,6 +86,17 @@
                     class="w-full px-4 py-3 rounded-xl bg-muted outline-none focus:ring-2 focus:ring-primary resize-y">{{ $val('description') }}</textarea>
             </div>
 
+            <div>
+                <div class="flex items-center justify-between mb-1.5">
+                    <label class="block text-sm font-semibold">Localisation <span class="text-slate-400 font-normal">(facultatif)</span></label>
+                    <button type="button" id="geoBtn" class="text-xs font-semibold text-primary inline-flex items-center gap-1 hover:underline"><i data-lucide="locate-fixed" class="w-3.5 h-3.5"></i>Ma position</button>
+                </div>
+                <div id="map" class="h-56 rounded-xl border border-line overflow-hidden bg-muted z-0"></div>
+                <p id="coords" class="mt-1.5 text-xs text-slate-400">Cliquez sur la carte pour situer la mission.</p>
+                <input type="hidden" name="latitude" id="latitude" value="{{ $val('latitude') }}" />
+                <input type="hidden" name="longitude" id="longitude" value="{{ $val('longitude') }}" />
+            </div>
+
             <div class="flex flex-col sm:flex-row gap-3 pt-2">
                 <button type="submit" name="status" value="published"
                     class="btn-press flex-1 h-12 rounded-xl text-white font-semibold bg-gradient-to-r from-accent to-accent-dark shadow-lg shadow-accent/25 inline-flex items-center justify-center gap-2">
@@ -99,4 +110,29 @@
         </form>
     </main>
 </div>
+
+@push('scripts')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    window.addEventListener('load', () => {
+        const latIn = document.getElementById('latitude'), lngIn = document.getElementById('longitude'),
+              coords = document.getElementById('coords');
+        const start = [parseFloat(latIn.value) || 4.0511, parseFloat(lngIn.value) || 9.7679];
+        const map = L.map('map').setView(start, latIn.value ? 14 : 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map);
+        let marker = (latIn.value && lngIn.value) ? L.marker(start).addTo(map) : null;
+        const setPoint = (lat, lng) => {
+            latIn.value = lat.toFixed(6); lngIn.value = lng.toFixed(6);
+            coords.textContent = `📍 ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+            marker ? marker.setLatLng([lat, lng]) : (marker = L.marker([lat, lng]).addTo(map));
+        };
+        map.on('click', e => setPoint(e.latlng.lat, e.latlng.lng));
+        document.getElementById('geoBtn').addEventListener('click', () => {
+            navigator.geolocation?.getCurrentPosition(p => { map.setView([p.coords.latitude, p.coords.longitude], 15); setPoint(p.coords.latitude, p.coords.longitude); });
+        });
+        setTimeout(() => map.invalidateSize(), 200);
+    });
+</script>
+@endpush
 @endsection

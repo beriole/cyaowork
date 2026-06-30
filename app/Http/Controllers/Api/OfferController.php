@@ -30,7 +30,8 @@ class OfferController extends Controller
             $q->where('salary_amount', '<=', (float) $request->input('salary_max'));
         }
         if ($term = $request->string('q')->trim()->value()) {
-            $q->where(fn ($s) => $s->where('title', 'like', "%{$term}%")->orWhere('description', 'like', "%{$term}%"));
+            // Recherche full-text via Scout (driver database en dev, Meilisearch en prod).
+            $q->whereIn('id', JobOffer::search($term)->keys());
         }
 
         // Géo-recherche par rayon (Haversine) si lat/lng/radius fournis
