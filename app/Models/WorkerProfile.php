@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Scout\Searchable;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -12,9 +13,19 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class WorkerProfile extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, Searchable;
 
     protected $guarded = [];
+
+    /** Champs indexés (Scout). Le driver database interroge les colonnes propres. */
+    public function toSearchableArray(): array
+    {
+        return [
+            'headline' => $this->headline,
+            'bio' => $this->bio,
+            'city' => $this->city,
+        ];
+    }
 
     protected $casts = [
         'latitude' => 'float',

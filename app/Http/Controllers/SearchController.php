@@ -14,10 +14,11 @@ class SearchController extends Controller
 
         $query = WorkerProfile::with(['user', 'category', 'skills']);
 
-        // Filtre texte (métier / nom)
+        // Filtre texte : Scout (métier/bio/ville) + repli sur le nom de l'utilisateur.
         if ($q = $request->string('q')->trim()->value()) {
-            $query->where(function ($sub) use ($q) {
-                $sub->where('headline', 'like', "%{$q}%")
+            $scoutIds = WorkerProfile::search($q)->keys();
+            $query->where(function ($sub) use ($scoutIds, $q) {
+                $sub->whereIn('id', $scoutIds)
                     ->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%{$q}%"));
             });
         }

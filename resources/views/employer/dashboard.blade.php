@@ -20,7 +20,7 @@
         ['i' => 'search', 'n' => 'Rechercher', 'url' => route('employer.search')],
         ['i' => 'message-circle', 'n' => 'Messagerie'],
         ['i' => 'crown', 'n' => 'Abonnement'],
-        ['i' => 'settings', 'n' => 'Paramètres'],
+        ['i' => 'settings', 'n' => 'Paramètres', 'url' => route('employer.profile.edit')],
     ];
     $chart = [55, 62, 48, 70, 65, 88, 95]; $chartMax = max($chart);
 @endphp

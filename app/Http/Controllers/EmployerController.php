@@ -71,6 +71,38 @@ class EmployerController extends Controller
         return redirect()->route('employer.dashboard')->with('status', $msg);
     }
 
+    /** Formulaire d'édition du profil employeur. */
+    public function editProfile(): View
+    {
+        $employer = Auth::user();
+        $profile = $employer->employerProfile()->firstOrCreate([]);
+
+        return view('employer.profile-edit', compact('employer', 'profile'));
+    }
+
+    /** Enregistre le profil employeur (entreprise + coordonnées). */
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $employer = Auth::user();
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255', 'unique:users,email,'.$employer->id],
+            'company_name' => ['nullable', 'string', 'max:255'],
+            'type' => ['required', 'in:individual,company'],
+            'city' => ['nullable', 'string', 'max:120'],
+        ]);
+
+        $employer->update(['name' => $data['name'], 'email' => $data['email'] ?? null]);
+        $employer->employerProfile()->firstOrCreate([])->update([
+            'company_name' => $data['company_name'] ?? null,
+            'type' => $data['type'],
+            'city' => $data['city'] ?? null,
+        ]);
+
+        return redirect()->route('employer.dashboard')->with('status', 'Profil mis à jour.');
+    }
+
     /** Archive une offre (ou la republie si déjà archivée). */
     public function archiveOffer(JobOffer $offer): RedirectResponse
     {

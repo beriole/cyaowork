@@ -15,7 +15,8 @@ class SearchController extends Controller
         $q = WorkerProfile::with(['user', 'category', 'skills']);
 
         if ($term = $request->string('q')->trim()->value()) {
-            $q->where(fn ($s) => $s->where('headline', 'like', "%{$term}%")
+            $scoutIds = WorkerProfile::search($term)->keys();
+            $q->where(fn ($s) => $s->whereIn('id', $scoutIds)
                 ->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%{$term}%")));
         }
         if ($city = $request->string('city')->trim()->value()) {

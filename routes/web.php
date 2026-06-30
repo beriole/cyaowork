@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 // ---- Public ----
 Route::get('/', [LandingController::class, 'index'])->name('home');
 Route::view('/menu', 'hub')->name('hub');
+Route::get('/offres', [\App\Http\Controllers\OfferController::class, 'index'])->name('offers.index');
+Route::get('/offres/{offer}', [\App\Http\Controllers\OfferController::class, 'show'])->whereNumber('offer')->name('offers.show');
 Route::get('/travailleurs/{worker}', [\App\Http\Controllers\WorkerProfileController::class, 'show'])->name('workers.show');
 Route::post('/travailleurs/{worker}/contacter', [\App\Http\Controllers\WorkerProfileController::class, 'contact'])
     ->middleware('auth')->name('workers.contact');
@@ -41,6 +43,8 @@ Route::middleware(['auth', 'role:worker'])->group(function () {
 
 Route::middleware(['auth', 'role:employer'])->group(function () {
     Route::get('/employer', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
+    Route::get('/employer/profil', [EmployerController::class, 'editProfile'])->name('employer.profile.edit');
+    Route::put('/employer/profil', [EmployerController::class, 'updateProfile'])->name('employer.profile.update');
     Route::get('/employer/search', [SearchController::class, 'index'])->name('employer.search');
     Route::get('/offres/creer', [EmployerController::class, 'createOffer'])->name('employer.offer.create');
     Route::post('/offres', [EmployerController::class, 'storeOffer'])->name('employer.offer.store');

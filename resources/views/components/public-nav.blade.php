@@ -9,7 +9,7 @@
             </a>
             <div class="hidden md:flex items-center gap-7 text-[15px] font-medium text-slate-600">
                 <a href="#categories" class="hover:text-primary transition-colors">Métiers</a>
-                <a href="#offres" class="hover:text-primary transition-colors">Offres</a>
+                <a href="{{ route('offers.index') }}" class="hover:text-primary transition-colors">Offres</a>
                 <a href="#etapes" class="hover:text-primary transition-colors">Comment ça marche</a>
                 <a href="#confiance" class="hover:text-primary transition-colors">Confiance</a>
             </div>
@@ -27,7 +27,7 @@
         </div>
         <div id="mobileMenu" class="md:hidden hidden mt-2 rounded-2xl bg-white/90 backdrop-blur-xl border border-line shadow-xl p-3">
             <a href="#categories" class="block px-4 py-3 rounded-xl hover:bg-muted font-medium">Métiers</a>
-            <a href="#offres" class="block px-4 py-3 rounded-xl hover:bg-muted font-medium">Offres</a>
+            <a href="{{ route('offers.index') }}" class="block px-4 py-3 rounded-xl hover:bg-muted font-medium">Offres</a>
             <a href="#etapes" class="block px-4 py-3 rounded-xl hover:bg-muted font-medium">Comment ça marche</a>
             <a href="#confiance" class="block px-4 py-3 rounded-xl hover:bg-muted font-medium">Confiance</a>
             <a href="#" class="block px-4 py-3 rounded-xl text-primary font-semibold">Connexion</a>

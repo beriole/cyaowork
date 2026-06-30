@@ -27,6 +27,18 @@ class ScoutSearchTest extends TestCase
         $this->assertTrue($found->contains($offer->id));
     }
 
+    public function test_la_recherche_worker_via_scout(): void
+    {
+        $profile = \App\Models\WorkerProfile::whereNotNull('headline')->first();
+        $word = explode(' ', trim($profile->headline))[0];
+
+        $this->assertTrue(\App\Models\WorkerProfile::search($word)->keys()->contains($profile->id));
+
+        // L'API workers renvoie le profil correspondant.
+        $this->getJson('/api/v1/workers?q='.urlencode($word))
+            ->assertOk()->assertJsonFragment(['id' => $profile->id]);
+    }
+
     public function test_l_api_offers_utilise_la_recherche(): void
     {
         $offer = JobOffer::published()->create([
