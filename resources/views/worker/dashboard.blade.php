@@ -4,7 +4,7 @@
 @php
     $avatar = fn($id, $s = 96, $name = '') => $id
         ? "https://images.unsplash.com/photo-{$id}?w={$s}&h={$s}&fit=crop&q=78"
-        : 'https://ui-avatars.com/api/?name='.urlencode($name).'&background=1D4ED8&color=fff';
+        : 'https://ui-avatars.com/api/?name='.urlencode($name).'&background=17266A&color=fff';
     $periodFr = ['hour' => 'heure', 'day' => 'jour', 'month' => 'mois', 'intervention' => 'intervention'];
     $statusMap = [
         'sent'      => ['t' => 'Envoyée',   'c' => 'text-slate-500 bg-slate-100',  'i' => 'send'],
@@ -115,7 +115,7 @@
                         <div class="relative w-20 h-20 shrink-0">
                             <svg viewBox="0 0 80 80" class="w-20 h-20 -rotate-90">
                                 <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="8"/>
-                                <circle id="ring" cx="40" cy="40" r="34" fill="none" stroke="#22C55E" stroke-width="8" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6" style="transition:stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1)"/>
+                                <circle id="ring" cx="40" cy="40" r="34" fill="none" stroke="#F26A21" stroke-width="8" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6" style="transition:stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1)"/>
                             </svg>
                             <span class="absolute inset-0 grid place-items-center font-head font-extrabold text-lg">{{ $completion }}%</span>
                         </div>
@@ -241,7 +241,7 @@
                             @forelse($conversations as $c)
                             @php $last = $c->messages->first(); $unread = $last && !$last->read_at && $last->sender_id !== $worker->id; @endphp
                             <li class="flex items-center gap-3 p-2 rounded-xl hover:bg-muted transition-colors cursor-pointer">
-                                <img src="{{ $avatar($c->employer->avatar ?? null, 72) ?: 'https://ui-avatars.com/api/?name='.urlencode($c->employer->name).'&background=1D4ED8&color=fff' }}" class="w-10 h-10 rounded-full object-cover" alt="{{ $c->employer->name }}" loading="lazy" />
+                                <img src="{{ $avatar($c->employer->avatar ?? null, 72) ?: 'https://ui-avatars.com/api/?name='.urlencode($c->employer->name).'&background=17266A&color=fff' }}" class="w-10 h-10 rounded-full object-cover" alt="{{ $c->employer->name }}" loading="lazy" />
                                 <div class="flex-1 min-w-0"><div class="flex items-center justify-between"><p class="font-medium text-sm truncate">{{ $c->employer->name }}</p><span class="text-[11px] text-slate-400 shrink-0">{{ optional($c->last_message_at)->diffForHumans(short: true) }}</span></div><p class="text-xs {{ $unread ? 'text-ink font-medium' : 'text-slate-500' }} truncate">{{ $last?->body }}</p></div>
                                 @if($unread)<span class="w-2.5 h-2.5 rounded-full bg-accent shrink-0"></span>@endif
                             </li>

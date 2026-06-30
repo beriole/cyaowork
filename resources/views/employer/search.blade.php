@@ -182,7 +182,7 @@
         const center = points.length ? [points[0].lat, points[0].lng] : [4.058, 9.704];
         const m = L.map(elId, { scrollWheelZoom: false }).setView(center, 12);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(m);
-        const colors = ['#1D4ED8','#EC4899','#F59E0B','#0D9488','#7C3AED','#16A34A'];
+        const colors = ['#17266A','#EC4899','#F59E0B','#0D9488','#7C3AED','#F26A21'];
         const group = [];
         points.forEach((p, i) => {
             const icon = L.divIcon({ html: `<div class="pin" style="background:${colors[i%colors.length]}"><img src="${p.photo}"/></div>`, className: '', iconSize: [40,40], iconAnchor: [20,40] });

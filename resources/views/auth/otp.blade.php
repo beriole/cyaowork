@@ -42,8 +42,8 @@
 
 @push('scripts')
 <style>
-    .otp:focus{border-color:#1D4ED8;box-shadow:0 0 0 4px rgba(29,78,216,.15);transform:scale(1.05);outline:none;}
-    .otp.filled{border-color:#16A34A;background:#F0FDF4;}
+    .otp:focus{border-color:#17266A;box-shadow:0 0 0 4px rgba(23,38,106,.15);transform:scale(1.05);outline:none;}
+    .otp.filled{border-color:#F26A21;background:#FFF3EC;}
 </style>
 <script>
     window.addEventListener('DOMContentLoaded', () => {

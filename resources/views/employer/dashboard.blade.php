@@ -4,7 +4,7 @@
 @php
     $avatar = fn($id, $s = 80, $name = '') => $id
         ? "https://images.unsplash.com/photo-{$id}?w={$s}&h={$s}&fit=crop&q=78"
-        : 'https://ui-avatars.com/api/?name='.urlencode($name).'&background=1D4ED8&color=fff';
+        : 'https://ui-avatars.com/api/?name='.urlencode($name).'&background=17266A&color=fff';
     $offerStatus = [
         'published' => ['t' => 'Publiée',   'c' => 'text-accent-dark bg-accent/10'],
         'filled'    => ['t' => 'Pourvue',   'c' => 'text-primary bg-primary/10'],

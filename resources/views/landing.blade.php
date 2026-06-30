@@ -29,7 +29,7 @@
 @endphp
 
 @section('body')
-<div id="progress" class="fixed top-0 left-0 h-[3px] w-0 z-[60]" style="background:linear-gradient(90deg,#1D4ED8,#0EA5E9,#16A34A,#EC4899)"></div>
+<div id="progress" class="fixed top-0 left-0 h-[3px] w-0 z-[60]" style="background:linear-gradient(90deg,#17266A,#2F46B0,#F26A21,#FF8A3D)"></div>
 
 <x-public-nav />
 
@@ -215,7 +215,7 @@
 {{-- ============ CONFIANCE ============ --}}
 <section id="confiance" class="relative overflow-hidden">
     <div class="absolute inset-0 -z-10 bg-gradient-to-br from-primary via-primary-dark to-grape"></div>
-    <div class="absolute inset-0 -z-10 opacity-20" style="background-image:radial-gradient(circle at 20% 20%,#fff 0,transparent 40%),radial-gradient(circle at 80% 60%,#22C55E 0,transparent 35%);"></div>
+    <div class="absolute inset-0 -z-10 opacity-20" style="background-image:radial-gradient(circle at 20% 20%,#fff 0,transparent 40%),radial-gradient(circle at 80% 60%,#F26A21 0,transparent 35%);"></div>
     <div class="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-24 text-white">
         <div class="text-center max-w-2xl mx-auto reveal">
             <span class="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-3 py-1.5 text-sm font-semibold"><i data-lucide="shield-check" class="w-4 h-4"></i> Une plateforme de confiance</span>

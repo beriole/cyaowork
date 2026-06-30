@@ -6,14 +6,14 @@
 @source '../views';
 
 @theme {
-  /* ---- Brand colors (CyaoWork — Trust & Authority) ---- */
-  --color-primary:        #1D4ED8;
-  --color-primary-dark:   #1E40AF;
-  --color-primary-light:  #3B82F6;
-  --color-accent:         #16A34A;
-  --color-accent-dark:    #15803D;
-  --color-accent-light:   #22C55E;
-  --color-secondary:      #0EA5E9;
+  /* ---- Brand colors (CyaoWork — identité groupe CYAO : marine + orange) ---- */
+  --color-primary:        #17266A;
+  --color-primary-dark:   #101A4D;
+  --color-primary-light:  #2E3F94;
+  --color-accent:         #F26A21;
+  --color-accent-dark:    #D2551A;
+  --color-accent-light:   #FF8A3D;
+  --color-secondary:      #2F46B0;
   --color-ink:            #0F172A;
   --color-muted:          #EEF2F6;
   --color-line:           #E2E8F0;

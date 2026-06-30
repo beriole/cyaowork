@@ -4,7 +4,7 @@
 @php
     $avatar = fn($id, $s = 96, $name = '') => $id
         ? "https://images.unsplash.com/photo-{$id}?w={$s}&h={$s}&fit=crop&q=78"
-        : 'https://ui-avatars.com/api/?name='.urlencode($name).'&background=1D4ED8&color=fff';
+        : 'https://ui-avatars.com/api/?name='.urlencode($name).'&background=17266A&color=fff';
 @endphp
 
 @section('body')

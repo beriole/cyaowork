@@ -8,16 +8,16 @@
         body { color: #0F172A; font-size: 12px; line-height: 1.5; }
         header { position: fixed; top: -80px; left: 0; right: 0; height: 70px; }
         footer { position: fixed; bottom: -60px; left: 0; right: 0; height: 50px; color: #94A3B8; font-size: 10px; text-align: center; border-top: 1px solid #E2E8F0; padding-top: 8px; }
-        .brand { font-size: 22px; font-weight: bold; color: #1D4ED8; }
-        .brand span { color: #16A34A; }
-        .badge { float: right; background: #16A34A; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; }
-        h1 { font-size: 18px; color: #1E40AF; margin: 0 0 2px; }
+        .brand { font-size: 22px; font-weight: bold; color: #17266A; }
+        .brand span { color: #F26A21; }
+        .badge { float: right; background: #F26A21; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; }
+        h1 { font-size: 18px; color: #17266A; margin: 0 0 2px; }
         .ref { color: #64748B; font-size: 11px; }
         .parties { width: 100%; border-collapse: collapse; margin: 16px 0; }
         .parties td { width: 50%; vertical-align: top; padding: 12px; border: 1px solid #E2E8F0; border-radius: 8px; }
         .label { color: #64748B; font-size: 10px; text-transform: uppercase; letter-spacing: .5px; }
         .name { font-size: 14px; font-weight: bold; }
-        .section-title { background: #EEF2F6; color: #1E40AF; font-weight: bold; padding: 6px 10px; border-radius: 6px; margin: 18px 0 8px; }
+        .section-title { background: #EEF2F6; color: #17266A; font-weight: bold; padding: 6px 10px; border-radius: 6px; margin: 18px 0 8px; }
         table.details { width: 100%; border-collapse: collapse; }
         table.details td { padding: 6px 10px; border-bottom: 1px solid #EEF2F6; }
         table.details td.k { color: #64748B; width: 38%; }
@@ -25,10 +25,10 @@
         .terms p { margin: 6px 0; }
         .sign { width: 100%; border-collapse: collapse; margin-top: 26px; }
         .sign td { width: 50%; vertical-align: top; padding: 14px; border: 1px solid #E2E8F0; }
-        .signed { color: #15803D; font-weight: bold; }
+        .signed { color: #D2551A; font-weight: bold; }
         .pending { color: #D97706; font-weight: bold; }
         .stamp { margin-top: 8px; font-size: 10px; color: #64748B; }
-        .chip { display: inline-block; background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; padding: 2px 8px; border-radius: 20px; font-size: 10px; }
+        .chip { display: inline-block; background: #FFF3EC; color: #D2551A; border: 1px solid #FBD9C3; padding: 2px 8px; border-radius: 20px; font-size: 10px; }
     </style>
 </head>
 <body>

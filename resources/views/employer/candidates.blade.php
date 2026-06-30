@@ -4,7 +4,7 @@
 @php
     $avatar = fn($id, $s = 80, $name = '') => $id
         ? "https://images.unsplash.com/photo-{$id}?w={$s}&h={$s}&fit=crop&q=78"
-        : 'https://ui-avatars.com/api/?name='.urlencode($name).'&background=1D4ED8&color=fff';
+        : 'https://ui-avatars.com/api/?name='.urlencode($name).'&background=17266A&color=fff';
     $periodFr = ['hour' => 'heure', 'day' => 'jour', 'month' => 'mois', 'intervention' => 'intervention'];
     $appStatus = [
         'sent'      => ['t' => 'Nouvelle',   'c' => 'text-primary bg-primary/10'],

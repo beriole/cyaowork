@@ -99,7 +99,7 @@
 @push('scripts')
 <style>
     .role-card{transition:transform .25s,box-shadow .25s,border-color .25s;}
-    .role-card.sel{border-color:#1D4ED8;box-shadow:0 0 0 4px rgba(29,78,216,.12);}
+    .role-card.sel{border-color:#17266A;box-shadow:0 0 0 4px rgba(23,38,106,.12);}
 </style>
 <script>
     window.addEventListener('DOMContentLoaded', () => {
