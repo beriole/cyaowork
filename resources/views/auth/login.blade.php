@@ -34,6 +34,7 @@
                 <h1 class="text-2xl sm:text-3xl font-extrabold">Connexion</h1>
                 <p class="mt-2 text-slate-600">Accédez à votre espace CyaoWork.</p>
 
+                @if(session('status'))<p class="mt-4 text-sm rounded-xl bg-accent/10 text-accent-dark px-3 py-2">{{ session('status') }}</p>@endif
                 @error('login')<p class="mt-4 text-sm rounded-xl bg-rose/10 text-rose px-3 py-2">{{ $message }}</p>@enderror
 
                 <div class="mt-6 space-y-4">
@@ -45,7 +46,10 @@
                         <label class="block text-sm font-semibold mb-1.5">Mot de passe</label>
                         <div class="flex items-center gap-2 h-12 px-4 rounded-xl bg-muted focus-within:ring-2 focus-within:ring-primary"><i data-lucide="lock" class="w-5 h-5 text-slate-400"></i><input id="pwd" name="password" type="password" class="bg-transparent outline-none w-full" placeholder="••••••••" required /><button type="button" id="pwdToggle" class="text-slate-400 hover:text-primary"><i data-lucide="eye" class="w-5 h-5"></i></button></div>
                     </div>
-                    <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer"><input type="checkbox" name="remember" class="w-4 h-4 accent-primary" /> Se souvenir de moi</label>
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer"><input type="checkbox" name="remember" class="w-4 h-4 accent-primary" /> Se souvenir de moi</label>
+                        <a href="{{ route('password.forgot') }}" class="text-sm font-semibold text-primary hover:underline">Mot de passe oublié ?</a>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-press mt-6 w-full h-12 rounded-xl text-white font-semibold bg-gradient-to-r from-primary to-secondary shadow-lg shadow-primary/25 inline-flex items-center justify-center gap-2">Se connecter <i data-lucide="arrow-right" class="w-5 h-5"></i></button>

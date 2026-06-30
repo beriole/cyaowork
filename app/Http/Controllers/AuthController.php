@@ -147,4 +147,61 @@ class AuthController extends Controller
 
         return back()->with('dev_otp', $code);
     }
+
+    // ---------- Mot de passe oublié (réinitialisation par SMS) ----------
+    public function showForgot()
+    {
+        return view('auth.forgot');
+    }
+
+    /** Envoie un code de réinitialisation par SMS au numéro saisi. */
+    public function sendResetCode(Request $request)
+    {
+        $data = $request->validate(['login' => ['required', 'string']]);
+
+        $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        $user = User::where($field, $data['login'])->first();
+
+        // Toujours rediriger (anti-énumération), mais n'envoyer que si l'utilisateur existe.
+        $code = null;
+        if ($user) {
+            $code = (string) random_int(100000, 999999);
+            Cache::put("pwd_reset:{$user->id}", $code, now()->addMinutes(15));
+            $request->session()->put('pwd_reset_user', $user->id);
+            app(\App\Services\Sms\SmsProvider::class)->send($user->phone, "CyaoWork : code de réinitialisation {$code}. Valable 15 minutes.");
+        }
+
+        return redirect()->route('password.reset')->with('dev_otp', $code);
+    }
+
+    public function showReset(Request $request)
+    {
+        if (! $request->session()->has('pwd_reset_user')) {
+            return redirect()->route('password.forgot');
+        }
+
+        return view('auth.reset');
+    }
+
+    /** Vérifie le code et enregistre le nouveau mot de passe. */
+    public function resetPassword(Request $request)
+    {
+        $data = $request->validate([
+            'code' => ['required', 'digits:6'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        $userId = $request->session()->get('pwd_reset_user');
+        abort_unless($userId, 419);
+
+        if (Cache::get("pwd_reset:{$userId}") !== $data['code']) {
+            throw ValidationException::withMessages(['code' => 'Code invalide ou expiré.']);
+        }
+
+        User::whereKey($userId)->update(['password' => Hash::make($data['password'])]);
+        Cache::forget("pwd_reset:{$userId}");
+        $request->session()->forget('pwd_reset_user');
+
+        return redirect()->route('login')->with('status', 'Mot de passe réinitialisé. Vous pouvez vous connecter.');
+    }
 }

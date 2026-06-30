@@ -27,6 +27,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/inscription/verification', [AuthController::class, 'showOtp'])->name('otp.show');
     Route::post('/inscription/verification', [AuthController::class, 'verifyOtp'])->name('otp.verify');
     Route::post('/inscription/renvoyer', [AuthController::class, 'resendOtp'])->name('otp.resend');
+    Route::get('/mot-de-passe-oublie', [AuthController::class, 'showForgot'])->name('password.forgot');
+    Route::post('/mot-de-passe-oublie', [AuthController::class, 'sendResetCode'])->name('password.email');
+    Route::get('/mot-de-passe-oublie/reinitialiser', [AuthController::class, 'showReset'])->name('password.reset');
+    Route::post('/mot-de-passe-oublie/reinitialiser', [AuthController::class, 'resetPassword'])->name('password.update');
 });
 
 Route::post('/deconnexion', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
