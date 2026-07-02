@@ -14,12 +14,12 @@
     ];
     $txStatus = ['success' => ['t' => 'Réussi', 'c' => 'text-accent-dark bg-accent/10'], 'pending' => ['t' => 'En attente', 'c' => 'text-warn bg-warn/10'], 'failed' => ['t' => 'Échoué', 'c' => 'text-rose bg-rose/10']];
     $sideItems = [
-        ['i' => 'home', 'n' => 'Accueil', 'active' => true],
-        ['i' => 'briefcase', 'n' => 'Mes offres', 'badge' => $offers->count()],
-        ['i' => 'users', 'n' => 'Candidatures', 'badge' => $offers->sum('applications_count')],
+        ['i' => 'home', 'n' => 'Accueil', 'active' => true, 'url' => route('employer.dashboard')],
+        ['i' => 'briefcase', 'n' => 'Mes offres', 'badge' => $offers->count(), 'url' => route('employer.dashboard').'#mes-offres'],
+        ['i' => 'users', 'n' => 'Candidatures', 'badge' => $offers->sum('applications_count'), 'url' => route('employer.dashboard').'#candidatures'],
         ['i' => 'search', 'n' => 'Rechercher', 'url' => route('employer.search')],
-        ['i' => 'message-circle', 'n' => 'Messagerie'],
-        ['i' => 'crown', 'n' => 'Abonnement'],
+        ['i' => 'message-circle', 'n' => 'Messagerie', 'url' => route('messaging.index')],
+        ['i' => 'crown', 'n' => 'Abonnement', 'url' => route('employer.dashboard').'#abonnement'],
         ['i' => 'settings', 'n' => 'Paramètres', 'url' => route('employer.profile.edit')],
     ];
     $chart = [55, 62, 48, 70, 65, 88, 95]; $chartMax = max($chart);
@@ -103,7 +103,7 @@
             </section>
 
             <div class="grid lg:grid-cols-3 gap-6">
-                <section class="lg:col-span-2 space-y-4">
+                <section id="mes-offres" class="lg:col-span-2 space-y-4 scroll-mt-20">
                     <div class="flex items-center justify-between">
                         <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="briefcase" class="w-5 h-5 text-primary"></i> Mes offres</h2>
                     </div>
@@ -166,7 +166,7 @@
                     </div>
 
                     <div class="reveal rounded-3xl bg-white border border-line p-5">
-                        <div class="flex items-center justify-between mb-3"><h2 class="font-bold flex items-center gap-2"><i data-lucide="users" class="w-5 h-5 text-accent"></i> Candidatures récentes</h2></div>
+                        <div id="candidatures" class="flex items-center justify-between mb-3 scroll-mt-20"><h2 class="font-bold flex items-center gap-2"><i data-lucide="users" class="w-5 h-5 text-accent"></i> Candidatures récentes</h2></div>
                         <ul class="space-y-2">
                             @forelse($applications as $a)
                             @php $wp = $a->worker->workerProfile; $compat = $wp ? (int) round($wp->rating_avg / 5 * 100) : 80; @endphp
@@ -206,8 +206,8 @@
                     </div>
 
                     @if($transactions->isNotEmpty())
-                    <div class="reveal rounded-3xl bg-white border border-line p-5">
-                        <div class="flex items-center justify-between mb-3"><h2 class="font-bold flex items-center gap-2"><i data-lucide="wallet" class="w-5 h-5 text-accent"></i> Transactions</h2></div>
+                    <div id="abonnement" class="reveal rounded-3xl bg-white border border-line p-5 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-3"><h2 class="font-bold flex items-center gap-2"><i data-lucide="wallet" class="w-5 h-5 text-accent"></i> Transactions &amp; abonnement</h2></div>
                         <ul class="space-y-2">
                             @foreach($transactions as $t)
                             @php $ts = $txStatus[$t->status] ?? $txStatus['pending']; $prov = $t->provider === 'momo' ? ['MTN','bg-amber-400'] : ['ORG','bg-orange-500']; @endphp
@@ -227,10 +227,10 @@
 </div>
 
 <nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-xl border-t border-line flex justify-around items-center h-16 px-2" style="padding-bottom:env(safe-area-inset-bottom)">
-    <a href="#" class="flex flex-col items-center gap-0.5 text-primary"><i data-lucide="home" class="w-6 h-6"></i><span class="text-[11px] font-semibold">Accueil</span></a>
-    <a href="#" class="flex flex-col items-center gap-0.5 text-slate-400"><i data-lucide="briefcase" class="w-6 h-6"></i><span class="text-[11px]">Offres</span></a>
-    <a href="#" class="flex flex-col items-center gap-0.5 text-slate-400"><i data-lucide="users" class="w-6 h-6"></i><span class="text-[11px]">Candid.</span></a>
+    <a href="{{ route('employer.dashboard') }}" class="flex flex-col items-center gap-0.5 text-primary"><i data-lucide="home" class="w-6 h-6"></i><span class="text-[11px] font-semibold">Accueil</span></a>
+    <a href="{{ route('employer.dashboard') }}#mes-offres" class="flex flex-col items-center gap-0.5 text-slate-400"><i data-lucide="briefcase" class="w-6 h-6"></i><span class="text-[11px]">Offres</span></a>
+    <a href="{{ route('employer.dashboard') }}#candidatures" class="flex flex-col items-center gap-0.5 text-slate-400"><i data-lucide="users" class="w-6 h-6"></i><span class="text-[11px]">Candid.</span></a>
     <a href="{{ route('employer.search') }}" class="flex flex-col items-center gap-0.5 text-slate-400"><i data-lucide="search" class="w-6 h-6"></i><span class="text-[11px]">Recherche</span></a>
-    <a href="#" class="flex flex-col items-center gap-0.5 text-slate-400"><i data-lucide="message-circle" class="w-6 h-6"></i><span class="text-[11px]">Messages</span></a>
+    <a href="{{ route('messaging.index') }}" class="flex flex-col items-center gap-0.5 text-slate-400"><i data-lucide="message-circle" class="w-6 h-6"></i><span class="text-[11px]">Messages</span></a>
 </nav>
 @endsection
