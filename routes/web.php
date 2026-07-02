@@ -69,6 +69,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::post('/admin/verifications/{profile}/approve', [AdminController::class, 'approveProfile'])->name('admin.verifications.approve');
     Route::post('/admin/verifications/{profile}/reject', [AdminController::class, 'rejectProfile'])->name('admin.verifications.reject');
+    Route::post('/admin/signalements/{review}/ignorer', [AdminController::class, 'ignoreReport'])->name('admin.reports.ignore');
+    Route::post('/admin/signalements/{review}/sanctionner', [AdminController::class, 'sanctionReport'])->name('admin.reports.sanction');
 });
 
 Route::middleware('auth')->group(function () {

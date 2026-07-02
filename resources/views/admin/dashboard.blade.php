@@ -6,16 +6,12 @@
         ? "https://images.unsplash.com/photo-{$id}?w={$s}&h={$s}&fit=crop&q=78"
         : 'https://ui-avatars.com/api/?name='.urlencode($name).'&background=17266A&color=fff';
     $sideItems = [
-        ['i' => 'layout-dashboard', 'n' => "Vue d'ensemble", 'active' => true],
-        ['i' => 'user-check', 'n' => 'Vérifications', 'badge' => $verifications->count()],
-        ['i' => 'users', 'n' => 'Utilisateurs'],
-        ['i' => 'briefcase', 'n' => 'Offres'],
-        ['i' => 'flag', 'n' => 'Modération', 'badge' => $reports->count() ?: null],
-        ['i' => 'wallet', 'n' => 'Paiements'],
-        ['i' => 'bar-chart-3', 'n' => 'Statistiques'],
-        ['i' => 'settings', 'n' => 'Paramètres'],
+        ['i' => 'layout-dashboard', 'n' => "Vue d'ensemble", 'active' => true, 'url' => route('admin.dashboard')],
+        ['i' => 'user-check', 'n' => 'Vérifications', 'badge' => $verifications->count(), 'url' => route('admin.dashboard').'#verifications'],
+        ['i' => 'flag', 'n' => 'Modération', 'badge' => $reports->count() ?: null, 'url' => route('admin.dashboard').'#moderation'],
+        ['i' => 'wallet', 'n' => 'Paiements', 'url' => route('admin.dashboard').'#transactions'],
+        ['i' => 'settings', 'n' => 'Paramètres', 'url' => route('admin.dashboard')],
     ];
-    $chart = [55, 62, 48, 70, 65, 88, 95]; $chartMax = max($chart);
     $txStatus = ['success' => ['t' => 'Réussi', 'c' => 'text-accent-dark bg-accent/10'], 'pending' => ['t' => 'En attente', 'c' => 'text-warn bg-warn/10'], 'failed' => ['t' => 'Échoué', 'c' => 'text-rose bg-rose/10']];
 @endphp
 
@@ -30,7 +26,7 @@
         </div>
         <nav class="flex-1 p-3 space-y-1 text-[15px] overflow-y-auto">
             @foreach($sideItems as $s)
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ ($s['active'] ?? false) ? 'bg-white/10 text-white' : 'hover:bg-white/5 hover:text-white' }}">
+            <a href="{{ $s['url'] ?? '#' }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ ($s['active'] ?? false) ? 'bg-white/10 text-white' : 'hover:bg-white/5 hover:text-white' }}">
                 <i data-lucide="{{ $s['i'] }}" class="w-5 h-5"></i><span class="flex-1">{{ $s['n'] }}</span>
                 @if(!empty($s['badge']))<span class="text-xs font-bold {{ ($s['active'] ?? false) ? 'bg-primary text-white' : 'bg-warn text-white' }} rounded-full px-2 py-0.5">{{ $s['badge'] }}</span>@endif
             </a>
@@ -74,7 +70,7 @@
                 <section class="lg:col-span-2 space-y-4">
                     <div class="reveal rounded-3xl bg-white border border-line p-5">
                         <div class="flex items-center justify-between gap-3 mb-4">
-                            <h2 class="text-lg font-bold flex items-center gap-2"><i data-lucide="user-check" class="w-5 h-5 text-primary"></i> File de vérification d'identité</h2>
+                            <h2 id="verifications" class="text-lg font-bold flex items-center gap-2 scroll-mt-24"><i data-lucide="user-check" class="w-5 h-5 text-primary"></i> File de vérification d'identité</h2>
                             <span class="text-xs font-bold text-white bg-warn rounded-full px-2.5 py-1">{{ $verifications->count() }} en attente</span>
                         </div>
                         <ul class="space-y-3">
@@ -107,15 +103,19 @@
                     </div>
 
                     <div class="reveal rounded-3xl bg-white border border-line p-5">
-                        <h2 class="text-lg font-bold flex items-center gap-2 mb-4"><i data-lucide="flag" class="w-5 h-5 text-rose"></i> Signalements à modérer</h2>
+                        <h2 id="moderation" class="text-lg font-bold flex items-center gap-2 mb-4 scroll-mt-24"><i data-lucide="flag" class="w-5 h-5 text-rose"></i> Signalements à modérer</h2>
                         <ul class="space-y-3">
                             @forelse($reports as $r)
                             <li class="flex items-center gap-3 p-3 rounded-2xl border border-line">
                                 <span class="grid place-items-center w-10 h-10 rounded-xl text-rose bg-rose/10 shrink-0"><i data-lucide="message-square-warning" class="w-5 h-5"></i></span>
                                 <div class="flex-1 min-w-0"><p class="text-sm font-medium">Avis signalé</p><p class="text-xs text-slate-500 truncate">« {{ \Illuminate\Support\Str::limit($r->comment, 50) }} » — sur {{ $r->reviewee->name }}</p></div>
                                 <div class="flex items-center gap-1.5 shrink-0">
-                                    <button class="btn-press h-9 px-3 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-sm font-semibold">Ignorer</button>
-                                    <button class="btn-press h-9 px-3 rounded-lg bg-rose/10 text-rose hover:bg-rose hover:text-white text-sm font-semibold transition-colors">Sanctionner</button>
+                                    <form method="POST" action="{{ route('admin.reports.ignore', $r) }}">@csrf
+                                        <button class="btn-press h-9 px-3 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-sm font-semibold">Ignorer</button>
+                                    </form>
+                                    <form method="POST" action="{{ route('admin.reports.sanction', $r) }}" onsubmit="return confirm('Supprimer définitivement cet avis ?');">@csrf
+                                        <button class="btn-press h-9 px-3 rounded-lg bg-rose/10 text-rose hover:bg-rose hover:text-white text-sm font-semibold transition-colors">Sanctionner</button>
+                                    </form>
                                 </div>
                             </li>
                             @empty
@@ -127,17 +127,17 @@
 
                 <section class="space-y-6">
                     <div class="reveal rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5">
-                        <div class="flex items-center justify-between"><h2 class="font-bold flex items-center gap-2"><i data-lucide="line-chart" class="w-5 h-5 text-accent-light"></i> Revenus (7 j)</h2><span class="text-sm font-bold text-accent-light inline-flex items-center gap-1"><i data-lucide="trending-up" class="w-4 h-4"></i>+23%</span></div>
+                        <div class="flex items-center justify-between"><h2 class="font-bold flex items-center gap-2"><i data-lucide="line-chart" class="w-5 h-5 text-accent-light"></i> Revenus (7 j)</h2><span class="text-sm font-bold {{ $revenueDelta >= 0 ? 'text-accent-light' : 'text-rose' }} inline-flex items-center gap-1"><i data-lucide="{{ $revenueDelta >= 0 ? 'trending-up' : 'trending-down' }}" class="w-4 h-4"></i>{{ $revenueDelta >= 0 ? '+' : '' }}{{ $revenueDelta }}%</span></div>
                         <p class="mt-2 text-3xl font-extrabold font-head">{{ number_format($revenue, 0, ',', ' ') }} <span class="text-sm font-semibold text-white/50">FCFA</span></p>
                         <div class="mt-4 flex items-end justify-between gap-1.5 h-24">
                             @foreach($chart as $i => $d)
-                            <div class="flex-1 rounded-t bg-gradient-to-t from-accent to-accent-light" style="height:{{ $d / $chartMax * 100 }}%"></div>
+                            <div class="flex-1 rounded-t bg-gradient-to-t from-accent to-accent-light" style="height:{{ max($d / $chartMax * 100, 2) }}%" title="{{ number_format($d, 0, ',', ' ') }} FCFA"></div>
                             @endforeach
                         </div>
                     </div>
 
                     <div class="reveal rounded-3xl bg-white border border-line p-5">
-                        <div class="flex items-center justify-between mb-3"><h2 class="font-bold flex items-center gap-2"><i data-lucide="wallet" class="w-5 h-5 text-accent"></i> Transactions</h2></div>
+                        <div class="flex items-center justify-between mb-3"><h2 id="transactions" class="font-bold flex items-center gap-2 scroll-mt-24"><i data-lucide="wallet" class="w-5 h-5 text-accent"></i> Transactions</h2></div>
                         <ul class="space-y-2">
                             @forelse($transactions as $t)
                             @php $ts = $txStatus[$t->status] ?? $txStatus['pending']; $prov = $t->provider === 'momo' ? ['MTN','bg-amber-400'] : ['ORG','bg-orange-500']; @endphp

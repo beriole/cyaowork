@@ -40,6 +40,7 @@ class OfferController extends Controller
     {
         abort_unless($offer->status === 'published', 404);
         $offer->increment('views');
+        \App\Models\OfferView::record($offer->id);
         $offer->load(['category', 'employer'])->loadCount('applications');
 
         $hasApplied = Auth::user()?->isWorker()

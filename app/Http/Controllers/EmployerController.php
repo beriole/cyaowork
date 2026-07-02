@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\Category;
 use App\Models\Contract;
 use App\Models\JobOffer;
+use App\Models\OfferView;
 use App\Models\Subscription;
 use App\Models\Transaction;
 use App\Models\Conversation;
@@ -247,6 +248,30 @@ class EmployerController extends Controller
 
         $transactions = Transaction::where('user_id', $employer->id)->latest()->take(4)->get();
 
-        return view('employer.dashboard', compact('employer', 'offers', 'applications', 'subscription', 'stats', 'transactions'));
+        [$chart, $chartMax, $viewsDelta] = $this->viewsChart($offers->pluck('id'));
+
+        return view('employer.dashboard', compact('employer', 'offers', 'applications', 'subscription', 'stats', 'transactions', 'chart', 'chartMax', 'viewsDelta'));
+    }
+
+    /** Série des vues d'offres sur 7 jours + variation vs semaine précédente. */
+    private function viewsChart($offerIds): array
+    {
+        $byDay = OfferView::whereIn('job_offer_id', $offerIds)
+            ->where('viewed_at', '>=', now()->subDays(6)->startOfDay())
+            ->get(['viewed_at'])
+            ->groupBy(fn ($v) => $v->viewed_at->toDateString())
+            ->map->count();
+
+        $chart = collect(range(6, 0))
+            ->map(fn ($d) => (int) $byDay->get(now()->subDays($d)->toDateString(), 0))
+            ->all();
+
+        $thisWeek = array_sum($chart);
+        $prevWeek = OfferView::whereIn('job_offer_id', $offerIds)
+            ->whereBetween('viewed_at', [now()->subDays(13)->startOfDay(), now()->subDays(7)->endOfDay()])
+            ->count();
+        $delta = $prevWeek > 0 ? (int) round(($thisWeek - $prevWeek) / $prevWeek * 100) : ($thisWeek > 0 ? 100 : 0);
+
+        return [$chart, max(max($chart), 1), $delta];
     }
 }

@@ -52,6 +52,7 @@ class OfferController extends Controller
     public function show(JobOffer $offer)
     {
         $offer->increment('views');
+        \App\Models\OfferView::record($offer->id);
 
         return new JobOfferResource($offer->load(['category', 'employer'])->loadCount('applications'));
     }

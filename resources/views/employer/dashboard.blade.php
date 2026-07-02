@@ -22,7 +22,6 @@
         ['i' => 'crown', 'n' => 'Abonnement', 'url' => route('employer.dashboard').'#abonnement'],
         ['i' => 'settings', 'n' => 'Paramètres', 'url' => route('employer.profile.edit')],
     ];
-    $chart = [55, 62, 48, 70, 65, 88, 95]; $chartMax = max($chart);
 @endphp
 
 @section('body')
@@ -154,12 +153,12 @@
 
                 <section class="space-y-6">
                     <div class="reveal rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5">
-                        <div class="flex items-center justify-between"><h2 class="font-bold flex items-center gap-2"><i data-lucide="bar-chart-3" class="w-5 h-5 text-accent-light"></i> Vues (7 j)</h2><span class="text-sm font-bold text-accent-light inline-flex items-center gap-1"><i data-lucide="trending-up" class="w-4 h-4"></i>+18%</span></div>
+                        <div class="flex items-center justify-between"><h2 class="font-bold flex items-center gap-2"><i data-lucide="bar-chart-3" class="w-5 h-5 text-accent-light"></i> Vues (7 j)</h2><span class="text-sm font-bold {{ $viewsDelta >= 0 ? 'text-accent-light' : 'text-rose' }} inline-flex items-center gap-1"><i data-lucide="{{ $viewsDelta >= 0 ? 'trending-up' : 'trending-down' }}" class="w-4 h-4"></i>{{ $viewsDelta >= 0 ? '+' : '' }}{{ $viewsDelta }}%</span></div>
                         <div class="mt-4 flex items-end justify-between gap-2 h-28">
                             @foreach($chart as $i => $d)
-                            <div class="flex-1 flex flex-col items-center gap-1.5 group">
-                                <div class="w-full rounded-t-lg bg-gradient-to-t from-accent to-accent-light" style="height:{{ $d / $chartMax * 100 }}%"></div>
-                                <span class="text-xs text-white/50">{{ ['L','M','M','J','V','S','D'][$i] }}</span>
+                            <div class="flex-1 flex flex-col items-center gap-1.5 group" title="{{ $d }} vue{{ $d > 1 ? 's' : '' }}">
+                                <div class="w-full rounded-t-lg bg-gradient-to-t from-accent to-accent-light" style="height:{{ max($d / $chartMax * 100, 2) }}%"></div>
+                                <span class="text-xs text-white/50">{{ \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Carbon::now()->subDays(6 - $i)->isoFormat('dd')) }}</span>
                             </div>
                             @endforeach
                         </div>

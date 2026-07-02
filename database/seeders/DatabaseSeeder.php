@@ -76,6 +76,20 @@ class DatabaseSeeder extends Seeder
             'user_id' => $employer->id, 'type' => 'subscription', 'amount' => 15000,
             'provider' => 'momo', 'reference' => 'TX-'.Str::upper(Str::random(8)), 'status' => 'success',
         ]);
+        // Historique de transactions réussies (7 derniers jours) pour le graphe des revenus.
+        foreach (range(6, 0) as $d) {
+            foreach (range(1, random_int(1, 3)) as $ignored) {
+                $amount = [2500, 5000, 15000][random_int(0, 2)];
+                Transaction::create([
+                    'user_id' => $employer->id,
+                    'type' => ['boost', 'commission', 'subscription'][random_int(0, 2)],
+                    'amount' => $amount, 'provider' => random_int(0, 1) ? 'momo' : 'om',
+                    'reference' => 'TX-'.Str::upper(Str::random(8)), 'status' => 'success',
+                    'created_at' => now()->subDays($d)->setTime(random_int(8, 20), random_int(0, 59)),
+                    'updated_at' => now()->subDays($d),
+                ]);
+            }
+        }
 
         // ---- Travailleurs ----
         $workers = [
@@ -124,6 +138,23 @@ class DatabaseSeeder extends Seeder
                 'contract_type' => $o['type'], 'status' => $o['status'], 'is_boosted' => $o['boost'], 'views' => $o['views'],
             ]);
         }
+
+        // ---- Historique des vues d'offres (7 derniers jours) ----
+        $viewRows = [];
+        foreach ($offerModels as $om) {
+            if ($om->status !== 'published') {
+                continue;
+            }
+            for ($d = 0; $d <= 6; $d++) {
+                foreach (range(1, random_int(4, 16)) as $ignored) {
+                    $viewRows[] = [
+                        'job_offer_id' => $om->id,
+                        'viewed_at' => now()->subDays($d)->setTime(random_int(6, 22), random_int(0, 59)),
+                    ];
+                }
+            }
+        }
+        \App\Models\OfferView::insert($viewRows);
 
         // ---- Candidatures ----
         $apps = [[0, 0, 'interview'], [0, 1, 'seen'], [1, 3, 'accepted'], [2, 2, 'sent']];
